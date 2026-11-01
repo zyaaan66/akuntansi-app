@@ -5,7 +5,8 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+// Tidak ada halaman depan: langsung ke dashboard (tamu otomatis diarahkan ke login)
+Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

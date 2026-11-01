@@ -14,6 +14,7 @@ class AccountController extends Controller
         return Inertia::render('accounts/index', [
             'accounts' => Account::orderBy('code')->get(),
             'categories' => Account::CATEGORIES,
+            'canCreate' => request()->user()->role === 'akuntan',
         ]);
     }
 

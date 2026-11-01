@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->buatUser('Akuntan Demo', 'akuntan@example.com', 'akuntan');
         $this->buatUser('Manager Demo', 'manager@example.com', 'manager');
+
+        $this->call(ChartOfAccountsSeeder::class);
     }
 
     private function buatUser(string $nama, string $email, string $role): void

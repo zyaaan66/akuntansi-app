@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->buatUser('Manager Demo', 'manager@example.com', 'manager');
 
         $this->call(ChartOfAccountsSeeder::class);
+        $this->call(SampleJournalSeeder::class);
     }
 
     private function buatUser(string $nama, string $email, string $role): void

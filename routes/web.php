@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -16,6 +17,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('accounts', [AccountController::class, 'store'])
         ->middleware('role:akuntan')
         ->name('accounts.store');
+
+    // Laporan: akuntan dan manager boleh melihat
+    Route::prefix('laporan')->name('reports.')->group(function () {
+        Route::get('transaksi', [ReportController::class, 'transactions'])->name('transactions');
+        Route::get('buku-besar', [ReportController::class, 'ledger'])->name('ledger');
+        Route::get('neraca-saldo', [ReportController::class, 'trialBalance'])->name('trial-balance');
+        Route::get('laba-rugi', [ReportController::class, 'incomeStatement'])->name('income-statement');
+        Route::get('neraca', [ReportController::class, 'balanceSheet'])->name('balance-sheet');
+        Route::get('posisi-keuangan', [ReportController::class, 'financialPosition'])->name('financial-position');
+    });
 
     // Jurnal: hanya akuntan boleh input
     Route::middleware('role:akuntan')->group(function () {

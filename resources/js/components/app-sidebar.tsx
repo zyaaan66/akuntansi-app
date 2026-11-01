@@ -1,5 +1,15 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookText, FilePlus, LayoutGrid } from 'lucide-react';
+import {
+    BookOpen,
+    BookText,
+    ClipboardList,
+    FilePlus,
+    FileText,
+    Landmark,
+    LayoutGrid,
+    Scale,
+    TrendingUp,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -29,6 +39,19 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
+const reportNavItems: NavItem[] = [
+    { title: 'Data Transaksi', href: '/laporan/transaksi', icon: FileText },
+    { title: 'Buku Besar', href: '/laporan/buku-besar', icon: BookOpen },
+    { title: 'Neraca Saldo', href: '/laporan/neraca-saldo', icon: Scale },
+    { title: 'Laba Rugi', href: '/laporan/laba-rugi', icon: TrendingUp },
+    { title: 'Neraca', href: '/laporan/neraca', icon: Landmark },
+    {
+        title: 'Posisi Keuangan',
+        href: '/laporan/posisi-keuangan',
+        icon: ClipboardList,
+    },
+];
+
 // Menu khusus akuntan (server tetap membatasi lewat middleware role)
 const akuntanNavItems: NavItem[] = [
     {
@@ -46,8 +69,8 @@ export function AppSidebar() {
     };
     const items =
         auth.user.role === 'akuntan'
-            ? [...mainNavItems, ...akuntanNavItems]
-            : mainNavItems;
+            ? [...mainNavItems, ...akuntanNavItems, ...reportNavItems]
+            : [...mainNavItems, ...reportNavItems];
 
     return (
         <Sidebar collapsible="icon" variant="inset">

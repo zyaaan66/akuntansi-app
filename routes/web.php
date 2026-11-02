@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     // COA: akuntan dan manager boleh melihat
     Route::get('accounts', [AccountController::class, 'index'])->name('accounts.index');

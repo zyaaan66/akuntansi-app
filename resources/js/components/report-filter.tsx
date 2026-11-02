@@ -13,6 +13,34 @@ type Props = {
     children?: ReactNode;
 };
 
+// Format tanggal lokal YYYY-MM-DD (tanpa toISOString supaya tidak bergeser zona waktu)
+const ymd = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+const presets = [
+    {
+        label: 'Bulan ini',
+        range: (n: Date) => [
+            new Date(n.getFullYear(), n.getMonth(), 1),
+            new Date(n.getFullYear(), n.getMonth() + 1, 0),
+        ],
+    },
+    {
+        label: 'Bulan lalu',
+        range: (n: Date) => [
+            new Date(n.getFullYear(), n.getMonth() - 1, 1),
+            new Date(n.getFullYear(), n.getMonth(), 0),
+        ],
+    },
+    {
+        label: 'Tahun ini',
+        range: (n: Date) => [
+            new Date(n.getFullYear(), 0, 1),
+            new Date(n.getFullYear(), 11, 31),
+        ],
+    },
+];
+
 export function ReportFilter({
     path,
     filters,
@@ -23,12 +51,10 @@ export function ReportFilter({
     const [dari, setDari] = useState(filters.dari ?? '');
     const [sampai, setSampai] = useState(filters.sampai);
 
-    function submit(e: FormEvent) {
-        e.preventDefault();
-
-        const query: Record<string, string> = { ...extra, sampai };
+    function go(from: string, to: string) {
+        const query: Record<string, string> = { ...extra, sampai: to };
         if (!asOf) {
-            query.dari = dari;
+            query.dari = from;
         }
         Object.keys(query).forEach((k) => {
             if (query[k] === '') {
@@ -37,6 +63,18 @@ export function ReportFilter({
         });
 
         router.get(path, query);
+    }
+
+    function submit(e: FormEvent) {
+        e.preventDefault();
+        go(dari, sampai);
+    }
+
+    function applyPreset(range: (n: Date) => Date[]) {
+        const [from, to] = range(new Date());
+        setDari(ymd(from));
+        setSampai(ymd(to));
+        go(ymd(from), ymd(to));
     }
 
     return (
@@ -68,6 +106,18 @@ export function ReportFilter({
             </div>
             {children}
             <Button type="submit">Tampilkan</Button>
+            <div className="flex flex-wrap gap-2">
+                {presets.map((p) => (
+                    <Button
+                        key={p.label}
+                        type="button"
+                        variant="outline"
+                        onClick={() => applyPreset(p.range)}
+                    >
+                        {p.label}
+                    </Button>
+                ))}
+            </div>
         </form>
     );
 }

@@ -26,21 +26,24 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Akun (COA)',
-        href: '/accounts',
-        icon: BookText,
-    },
+const utamaNavItems: NavItem[] = [
+    { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
 ];
 
-const reportNavItems: NavItem[] = [
+const masterNavItems: NavItem[] = [
+    { title: 'Akun (COA)', href: '/accounts', icon: BookText },
+];
+
+// Menu khusus akuntan (server tetap membatasi lewat middleware role)
+const akuntanNavItems: NavItem[] = [
+    { title: 'Input Jurnal', href: '/journals/create', icon: FilePlus },
+];
+
+const transaksiNavItems: NavItem[] = [
     { title: 'Data Transaksi', href: '/laporan/transaksi', icon: FileText },
+];
+
+const laporanNavItems: NavItem[] = [
     { title: 'Buku Besar', href: '/laporan/buku-besar', icon: BookOpen },
     { title: 'Neraca Saldo', href: '/laporan/neraca-saldo', icon: Scale },
     { title: 'Laba Rugi', href: '/laporan/laba-rugi', icon: TrendingUp },
@@ -52,25 +55,16 @@ const reportNavItems: NavItem[] = [
     },
 ];
 
-// Menu khusus akuntan (server tetap membatasi lewat middleware role)
-const akuntanNavItems: NavItem[] = [
-    {
-        title: 'Input Jurnal',
-        href: '/journals/create',
-        icon: FilePlus,
-    },
-];
-
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
     const { auth } = usePage().props as unknown as {
         auth: { user: { role?: string } };
     };
-    const items =
-        auth.user.role === 'akuntan'
-            ? [...mainNavItems, ...akuntanNavItems, ...reportNavItems]
-            : [...mainNavItems, ...reportNavItems];
+    const isAkuntan = auth.user.role === 'akuntan';
+    const transaksiItems = isAkuntan
+        ? [...akuntanNavItems, ...transaksiNavItems]
+        : transaksiNavItems;
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -87,7 +81,10 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={items} />
+                <NavMain label="Utama" items={utamaNavItems} />
+                <NavMain label="Data Master" items={masterNavItems} />
+                <NavMain label="Transaksi" items={transaksiItems} />
+                <NavMain label="Laporan" items={laporanNavItems} />
             </SidebarContent>
 
             <SidebarFooter>

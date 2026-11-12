@@ -259,7 +259,7 @@ Seeder otomatis membuat akun demo. **Ganti password sebelum production!**
 | Peran | Email | Password | Keterangan |
 |-------|-------|----------|------------|
 | Akuntan | akuntan@example.com | password | Full akses |
-| Manager | manajer@contoh.com | password | Read-only |
+| Manager | manager@contoh.com | password | Read-only |
 
 Seeder tambahan:
 - 18 akun COA standar (Kas 1-100, Bank 1-101, Piutang 1-200, dst. sampai Beban)
